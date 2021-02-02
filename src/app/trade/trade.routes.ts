@@ -5,7 +5,7 @@ import { insertTradeValidationRules, updateTradeValidationRules, deleteTradeVali
 import { addTrades, updateTrade, deleteTrade } from './trade.controller';
 
 router.post('/insert', insertTradeValidationRules(), validate, addTrades);
-router.put('/update', updateTradeValidationRules(), validate, updateTrade);
+router.patch('/update', updateTradeValidationRules(), validate, updateTrade);
 router.delete('/delete', deleteTradeValidationRules(), validate, deleteTrade);
 
 export { router as tradeRouter };
