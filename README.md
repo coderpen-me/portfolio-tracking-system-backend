@@ -21,3 +21,4 @@ This application is a mock for portfolio tracking in trading systems. Various ac
     - Get user by email
     - Get all users
 
+    - Clear trades and portfolios (Not user & securities) collections
