@@ -5,7 +5,7 @@
     "main": "dist/server.js",
     "scripts": {
         "start": "npm run prebuild && npm run watch",
-        "build": "npm run build-ts",
+        "build": "npm install --save-dev && npm install && npm run build-ts",
         "serve": "set NODE_ENV=local&&nodemon dist/server.js",
         "build-serve": "npm run build && set NODE_ENV=local&&nodemon dist/server.js",
         "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"set NODE_ENV=local&& nodemon dist/server.js\"",
