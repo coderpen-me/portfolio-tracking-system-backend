@@ -30,7 +30,7 @@ export const getAllSecurities = async () => {
 };
 
 // Fetch a security by input security symbol
-export const getSecurityBySymbol = async (symbol: string) => {
+export const getSecurityFilteredBySymbol = async (symbol: string) => {
     try {
         return await SecuritiesModel.findOne({ securitySymbol: symbol });
     } catch (error) {

@@ -4,7 +4,7 @@ import SecuritiesModel from '../security/securities.model';
 import TradeModel from '../trade/trades.model';
 import UserModel from '../user/user.model';
 import { getPortfolioDetails } from '../portfolio/portfolio.service';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 
 export const insertTradeValidationRules = () => {
     return [
@@ -99,7 +99,7 @@ export const updateTradeValidationRules = () => {
 
 export const deleteTradeValidationRules = () => {
     return [
-        body('userId')
+        query('userId')
             .notEmpty()
             .withMessage('userId is missing')
             .bail()
@@ -110,7 +110,7 @@ export const deleteTradeValidationRules = () => {
                 }
                 return true;
             }),
-        body('tradeId')
+        query('tradeId')
             .notEmpty()
             .withMessage('tradeId is missing')
             .bail()

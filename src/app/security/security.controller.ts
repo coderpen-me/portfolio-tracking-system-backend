@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { addSecurity, getAllSecurities, getSecurityBySymbol, getSecurityLatestTransactionPrice } from './securities.service';
+import { addSecurity, getAllSecurities, getSecurityFilteredBySymbol, getSecurityLatestTransactionPrice } from './securities.service';
 import { Request, Response } from 'express';
 import { operationalErrors, securityEntityErrors } from '../utils/constants';
 import { sendResponse } from '../utils/responseService';
@@ -26,9 +26,26 @@ export const createSecurity = async (req: Request, res: Response) => {
  */
 export const getSecurities = async (req: Request, res: Response) => {
     try {
-        let result;
-        if (req.query.symbol) result = await getSecurityBySymbol(req.query.symbol as string);
-        else result = await getAllSecurities();
+        const result = await getAllSecurities();
+        if (result) {
+            sendResponse(res, 200, { data: result });
+        } else {
+            sendResponse(res, 404, { message: securityEntityErrors.securityNotFound });
+        }
+    } catch (error) {
+        sendResponse(res, error.status ?? 500, { message: error.message ? error.message : operationalErrors.internalServerError, error: error.error ?? [] });
+    }
+};
+
+/**
+ *get security method -> If symbol is provided in input query params, It will find security with that Symbol
+ *                       Else, it will show all securities
+ * @param req
+ * @param res
+ */
+export const getSecurityBySymbol = async (req: Request, res: Response) => {
+    try {
+        const result = await getSecurityFilteredBySymbol(req.query.symbol as string);
         if (result) {
             sendResponse(res, 200, { data: result });
         } else {

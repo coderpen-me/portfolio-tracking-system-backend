@@ -47,7 +47,7 @@ export const updateTrade = async (req: Request, res: Response) => {
  */
 export const deleteTrade = async (req: Request, res: Response) => {
     try {
-        await tradeService.deleteTrade(req.body.userId, req.body.tradeId);
+        await tradeService.deleteTrade(req.query.userId as string, req.query.tradeId as string);
         sendResponse(res, 200, { message: 'trade deleted successfully' });
     } catch (error) {
         sendResponse(res, error.status ?? 500, { message: error.message ? error.message : operationalErrors.internalServerError, error: error.error ?? [] });

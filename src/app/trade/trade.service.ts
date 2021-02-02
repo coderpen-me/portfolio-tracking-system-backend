@@ -215,7 +215,7 @@ export const updateTrade = async (updateTradeData: Record<any, any>) => {
  * @param userId
  * @param tradeId
  */
-export const deleteTrade = async (userId: string, tradeId: Record<any, any>) => {
+export const deleteTrade = async (userId: string, tradeId: string) => {
     try {
         const portfolio: any = await getPortfolioDetails(userId);
         const trade: any = await TradeModel.findOne({ _id: tradeId });
