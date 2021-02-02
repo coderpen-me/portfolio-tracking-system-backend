@@ -23,5 +23,6 @@ export const securityEntityErrors = {
 export const tradeEntityErrors = {
     tradeNotFound: 'trade not found',
     tradeUpdateFailed: 'update trade failed',
+    tradeDeleteFailed: 'delete trade failed',
     tradeInsertFailed: 'insert trade failed',
 };
