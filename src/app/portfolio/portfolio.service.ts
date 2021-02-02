@@ -78,7 +78,7 @@ export const getPortfolioTrade = async (userId: string) => {
  */
 export const getPortfolioReturns = async (userId: string) => {
     try {
-        const portfolio = await getPortfolioDetails(userId);
+        const portfolio: any = await getPortfolioDetails(userId);
         let sum = 0;
         if (portfolio.securities && portfolio.securities.length > 0) {
             for (const security of portfolio.securities) {

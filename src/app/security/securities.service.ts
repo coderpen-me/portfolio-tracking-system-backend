@@ -44,7 +44,7 @@ export const getSecurityBySymbol = async (symbol: string) => {
 // Fetch lastest price of a security by input security symbol
 export const getSecurityLatestTransactionPrice = async (symbol: string) => {
     try {
-        const security = await SecuritiesModel.findOne({ securitySymbol: symbol }, { latestTransactionPrice: 1, _id: 0 });
+        const security: any = await SecuritiesModel.findOne({ securitySymbol: symbol }, { latestTransactionPrice: 1, _id: 0 });
         return security.latestTransactionPrice;
     } catch (error) {
         throw {
