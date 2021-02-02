@@ -1,0 +1,631 @@
+openapi: 3.0.1
+info:
+  title: Portfolio Tracking Application - Backend System
+  version: 1.0.0
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: >-
+    This application is a mock for portfolio tracking in trading systems. Various actions can be performed like SELL, BUY, List your Holdings, list all transactions, etc.
+tags:
+- name: user
+  description: user entity for a real world user
+- name: security
+  description: A simple definition of a security is any proof of ownership or debt that has been assigned a value and may be sold.
+- name: trade
+  description: trade entity that represents a BUY or SELL trade
+- name: portfolio
+  description: A simple definition of a security is any proof of ownership or debt that has been assigned a value and may be sold.
+- name: database
+  description: this entity handles db operations on high level
+
+paths:
+  /api/v1/security/:
+    post:
+      tags:
+      - security
+      summary: This api is used to create a new security
+      requestBody:
+        description: "Provide symbol & name"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddSecuritySchema'
+        required: true
+      responses:
+        200:
+          description: Success response after create a new security
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/AddSecuritySuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    get:
+      tags:
+      - security
+      summary: This api will return a security by symbol
+      responses:
+        200:
+          description: This api will return a security by symbol
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/GetSecurityResponseSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/security/all/:
+    get:
+      tags:
+      - security
+      summary: This api will return securities list
+      responses:
+        200:
+          description: This api will return securities list
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/GetSecurityListResponseSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/security/latest-transaction-price/:
+    get:
+      tags:
+      - security
+      summary: This api returns latest price of a security
+      parameters:
+        - name: symbol
+          in: query
+          description: symbol of users
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: This api returns latest price of a security
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/LTPResponseSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/trade/insert/:
+    post:
+      tags:
+      - trade
+      summary: This api is used to insert new trades and then update portfolio.
+      requestBody:
+        description: "Provide userId & trades array"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertTradeSchema'
+        required: true
+      responses:
+        200:
+          description: Success response for inserted trade record
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InsertTradeSuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/trade/update/:
+    patch:
+      tags:
+      - trade
+      summary: This api is used to update trade and then update portfolio.
+      requestBody:
+        description: "Provide userId, tradeId, tradeQuantity, tradeType & unitPrice"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTradeSchema'
+        required: true
+      responses:
+        200:
+          description: Success response for inserted trade record
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/UpdateTradeSuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/trade/delete/:
+    delete:
+      tags:
+      - trade
+      summary: This api is used to delete trade and then update portfolio.
+      parameters:
+        - name: userId
+          in: query
+          description: _id of user
+          required: true
+          schema:
+            type: string
+        - name: tradeId
+          in: query
+          description: _id of trade
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success response for inserted trade record
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/DeleteTradeSuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/portfolio/returns/:
+    get:
+      tags:
+      - portfolio
+      summary: This api calculates total returns of a user and return back
+      parameters:
+        - name: userId
+          in: query
+          description: userId of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Total return of user
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/PortfolioReturnsSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/portfolio/trades/:
+    get:
+      tags:
+      - portfolio
+      summary: This api fetches all the securities in portfolio and corresponding trades grouped by security
+      parameters:
+        - name: userId
+          in: query
+          description: userId of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Fetches all the securities in portfolio and corresponding trades grouped by security
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/PortfolioTradeSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/portfolio/holdings/:
+    get:
+      tags:
+      - portfolio
+      summary: Returns all securites and their current total quantity and average price.
+      parameters:
+        - name: userId
+          in: query
+          description: userId of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Gives all securites and their current total quantity and average price.
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/PortfolioHoldingsSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/user/:
+    post:
+      tags:
+        - user
+      summary: This api will add a new user
+      requestBody:
+        description: "Provide userName & emailAddress in request body"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserSchema'
+        required: true
+      responses:
+        200:
+          description: Success response for add user operation
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/AddUserSuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    get:
+      tags:
+      - user
+      summary: This api will return users list
+      responses:
+        200:
+          description: List of popup fields
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/GetUsersListResponseSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/user/all/:
+    get:
+      tags:
+      - user
+      summary: This api a particular user object
+      parameters:
+        - name: emailAddress
+          in: query
+          description: email address of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of popup fields
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/GetUserResponseSchema"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/v1/database-clear/:
+    post:
+      tags:
+        - database
+      summary: This api will clear all trades & portfolios
+      responses:
+        200:
+          description: Success response for clear operation
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/TradesPortfolioClearSuccessResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    GetSecurityResponseSchema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            latestTransactionPrice:
+              type: number
+            _id:
+              type: string
+            name:
+              type: string
+            securitySymbol:
+              type: string
+            __v:
+              type: number
+    GetSecurityListResponseSchema:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              latestTransactionPrice:
+                type: number
+              _id:
+                type: string
+              name:
+                type: string
+              securitySymbol:
+                type: string
+              __v:
+                type: number
+    AddSecuritySuccessResponse:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        message: security created successfully
+    LTPResponseSchema:
+      type: object
+      properties:
+        data:
+          type: number
+      example:
+        data: 10
+    DeleteTradeSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "trade deleted successfully"
+    UpdateTradeSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            securitySymbol:
+              type: string
+            tradeQuantity:
+              type: number
+            tradeType:
+              type: string
+            userId:
+              type: string
+            unitPrice:
+              type: number
+            totalPrice:
+              type: number
+            _id:
+              type: string
+            date:
+              type: string
+            __v:
+              type: string
+    InsertTradeSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              securitySymbol:
+                type: string
+              tradeQuantity:
+                type: number
+              tradeType:
+                type: string
+              userId:
+                type: string
+              unitPrice:
+                type: number
+              totalPrice:
+                type: number
+              _id:
+                type: string
+              date:
+                type: string
+              __v:
+                type: string
+    PortfolioHoldingsSchema:
+      type: object
+      properties:
+        portfolioHoldings:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+              securitySymbol:
+                type: string
+              totalQuantity:
+                type: number
+              averageBuyPrice:
+                type: number
+    PortfolioTradeSchema:
+      type: object
+      properties:
+        portfolioTrades:
+          type: object
+          properties:
+            _id:
+              type: string
+            securities:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  securitySymbol:
+                    type: string
+                  totalQuantity:
+                    type: number
+                  averageBuyPrice:
+                    type: number
+            userId:
+              type: string
+            trades:
+              type: object
+    PortfolioReturnsSchema:
+      type: object
+      properties:
+        portfolioReturns:
+          type: number
+    InsertTradeSchema:
+      type: object
+      properties:
+        userId:
+          type: string
+        trades:
+          type: array
+          items:
+            type: object
+            properties:
+              securitySymbol:
+                type: string
+              tradeQuantity:
+                type: number
+              tradeType:
+                type: string
+    UpdateTradeSchema:
+      type: object
+      properties:
+        userId:
+          type: string
+        tradeId:
+          type: string
+        tradeQuantity:
+          type: number
+        tradeType:
+          type: string
+        unitPrice:
+          type: number
+    DeleteTradeSchema:
+      type: object
+      properties:
+        userId:
+          type: string
+        tradeId:
+          type: string
+    AddSecuritySchema:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+    GetUserResponseSchema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            _id: 
+              type: string
+            userName:
+              type: string
+            emailAddress:
+              type: string
+            __v:
+              type: number
+      example:
+        data: {
+          _id: "19fd8044-0709-4a72-a0ef-ff6785137351",
+          userName: "Adarsh Pandey",
+          emailAddress: "adarsh@gmail.com",
+          __v: 0
+        }
+    GetUsersListResponseSchema:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              _id: 
+                type: string
+              userName:
+                type: string
+              emailAddress:
+                type: string
+              __v:
+                type: number
+      example:
+        data: [
+          {
+            _id: "19fd8044-0709-4a72-a0ef-ff6785137351",
+            userName: "Adarsh Pandey",
+            emailAddress: "adarsh@gmail.com",
+            __v: 0
+          }
+        ]
+    AddUserSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "user created successfully"
+    AddUserSchema:
+      type: object
+      properties:
+        userName:
+          type: string
+        emailAddress:
+          type: string
+      example:
+        {
+          userName: "Adarsh Pandey",
+          emailAddress: "adarsh@gmail.com"
+        }
+    TradesPortfolioClearSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "trades & portfolios cleared !"
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "Internal server error"
+externalDocs:
+  description: "Find out more about application code"
+  url: "https://github.com/coderpen-me/portfolio-tracking-system-backend#portfolio-tracking-application---backend-system"
