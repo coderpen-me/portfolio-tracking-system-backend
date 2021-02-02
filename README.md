@@ -23,10 +23,10 @@ This application is a mock for portfolio tracking in trading systems. Various ac
 
     - Clear trades and portfolios (Not user & securities) collections
 
-### API specifications file is available in root directory, named as **api-specs.yaml**
-### [Copy api-specs.yaml file & visit this link. Now paste specs file content to this editor. ](https://editor.swagger.io/)
+1. API specifications
+* API specifications file is available in root directory, named as **api-specs.yaml**
+* Copy api-specs.yaml file & visit this [link](https://editor.swagger.io/). Now paste specs file content to this editor
+2. Click here to [download](https://coderpen.in/drive/wl/?id=n4pqZIInAUakuRq2Oac561pGiuRqcRAA) postman collection of all APIs
 
-### [Click here to download postman collection of all APIs](https://coderpen.in/drive/wl/?id=n4pqZIInAUakuRq2Oac561pGiuRqcRAA)
-
-### [Application is hosted here](https://portfolio-tracking-application.herokuapp.com)
+3. Application is hosted [here](https://portfolio-tracking-application.herokuapp.com)
 [@coderpen](https://coderpen.in)
