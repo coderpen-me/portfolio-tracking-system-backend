@@ -22,3 +22,7 @@ This application is a mock for portfolio tracking in trading systems. Various ac
     - Get all users
 
     - Clear trades and portfolios (Not user & securities) collections
+
+### API specifications file is available in root directory, named as **api-specs.yaml**
+### [Copy api-specs.yaml file & visit this link. Now paste specs file content to this editor. ](https://editor.swagger.io/)
+[@coderpen](https://coderpen.in)
